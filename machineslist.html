@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Máquinas</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 20%;
+            padding: 8px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result, #resulttopseller {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Listado de Máquinas</h1>
+
+    <table id="machineTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Ubicación</th>
+                <th>Ganancias</th>
+                <th>Estado</th>
+
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <label for="machineId">Ingrese el ID de la máquina:</label>
+    <input type="number" id="machineId" placeholder="ID de la máquina">
+
+    <button onclick="calculateTotalStonks()">Calcular Ganancias</button>
+    <h2>Maquina con más ganancias</h2>
+    <button onclick="findTopSellingMachine()">Encontrar la Máquina con más ventas</button>
+
+    <h3>Añadir productos</h3>
+    <form id="addProductsForm">
+        <label for="productName">Nombre del Producto:</label>
+        <input type="text" id="productName" name="productName" required>
+        
+        <label for="quantity">Cantidad:</label>
+        <input type="number" id="quantity" name="quantity" required>
+        
+        <label for="salePrice">Precio de Venta:</label>
+        <input type="number" id="salePrice" name="salePrice" required>
+        
+        <label for="purchasePrice">Precio de Compra:</label>
+        <input type="number" id="purchasePrice" name="purchasePrice" required>
+        
+        <button type="button" onclick="addProduct()">Añadir Producto</button>
+    </form>
+
+    <div id="result"></div>
+    <div id="resulttopseller"></div>
+
+    <hr>
+
+
+
+
+ <script src="./machinesl.js"></script>
+ <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetchMachineList();
+        });
+
+        function calculateTotalStonks() {
+            const machineIdInput = document.getElementById('machineId');
+            const machineId = machineIdInput.value;
+
+            // Verifica si se ingresó un ID antes de realizar la solicitud
+            if (machineId) {
+                fetch(`http://localhost:8080/machines/${machineId}/stonks`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Ganancias calculadas:', data.total);
+                        updateMachineInfo();
+                    })
+                    .catch(error => {
+                        console.error('Error al calcular las ganancias:', error);
+                    });
+            } else {
+                alert('Por favor, ingrese un ID de máquina válido.');
+            }
+        }
+
+        function updateMachineInfo() {
+            fetch('http://localhost:8080/machines/getallmachines')
+                .then(response => response.json())
+                .then(data => {
+                    displayMachineList(data);
+                })
+                .catch(error => {
+                    console.error('Error al obtener el listado de máquinas:', error);
+                });
+        }
+    </script>
+
+    <script src="./topsellingmachine.js"></script>
+
+
+    
+ <script src="./addproducto.js"> </script>
+
+
+
+</body>
+</html>
+
